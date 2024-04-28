@@ -7,6 +7,7 @@ import (
 	"log"
 	"main/booking"
 	"main/class"
+	"main/date"
 	"main/service"
 	"net/http"
 )
@@ -40,6 +41,7 @@ func (a *App) Start() {
 	http.HandleFunc("GET /status", a.HandleStatus)
 	http.Handle("PUT /classes", checkJsonContentType(http.HandlerFunc(a.HandlePutClasses)))
 	http.Handle("POST /bookings", checkJsonContentType(http.HandlerFunc(a.HandlePostBookings)))
+	http.HandleFunc("GET /day/{day}", a.HandleDay)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", a.Port), nil))
 }
@@ -98,6 +100,34 @@ func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (a *App) HandleDay(w http.ResponseWriter, r *http.Request) {
+	stringDay := r.PathValue("day")
+
+	day, err := date.NewDate(stringDay)
+	if err != nil {
+		http.Error(w, "input data invalid", http.StatusBadRequest)
+
+		return
+	}
+
+	classBookings, err := a.Service.GetClassBookings(day)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
+		return
+	}
+
+	response, err := json.Marshal(classBookings)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 
 func checkJsonContentType(next http.Handler) http.Handler {

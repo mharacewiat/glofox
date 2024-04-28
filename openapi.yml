@@ -52,3 +52,33 @@ paths:
           description: A booking was registered successfully
         '400':
           description: Bad Request
+
+  /day/{day}:
+    get:
+      summary: Get information about the class and their participants
+      parameters:
+        - in: path
+          name: day
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: The service is ready to receive requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  date:
+                    type: string
+                  capacity:
+                    type: integer
+                  participants:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Bad Request

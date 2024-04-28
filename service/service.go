@@ -16,6 +16,13 @@ type (
 	ServiceInterface interface {
 		CreateClass(class class.Class) (bool, error)
 		RegisterBooking(booking booking.Booking) (bool, error)
+		GetClassBookings(day date.Date) (ClassBookings, error)
+	}
+	ClassBookings struct {
+		Name         string    `json:"name"`
+		Date         date.Date `json:"date"`
+		Capacity     int       `json:"capacity"`
+		Participants []string  `json:"participants"`
 	}
 )
 
@@ -33,6 +40,8 @@ func (s *Service) CreateClass(c class.Class) (bool, error) {
 	days := getDays(c.StartDate, c.EndDate)
 
 	for _, day := range days {
+		fmt.Printf("Adding day %s", day)
+
 		if s.ClassesStorage.Has(day) {
 			return false, fmt.Errorf("a different class exists on day %s", day)
 		}
@@ -65,10 +74,33 @@ func (s *Service) RegisterBooking(b booking.Booking) (bool, error) {
 	return true, nil
 }
 
+func (s *Service) GetClassBookings(day date.Date) (ClassBookings, error) {
+	if !s.ClassesStorage.Has(day) {
+		return ClassBookings{}, fmt.Errorf("there's no class on day %s", day)
+	}
+
+	participants := []string{}
+
+	if s.BookingsStorage.Has(day) {
+		for _, b := range *s.BookingsStorage.Get(day) {
+			participants = append(participants, b.Name)
+		}
+	}
+
+	c := s.ClassesStorage.Get(day)
+
+	return ClassBookings{
+		Name:         c.Name,
+		Date:         day,
+		Capacity:     c.Capacity,
+		Participants: participants,
+	}, nil
+}
+
 func getDays(from date.Date, to date.Date) []date.Date {
 	days := []date.Date{}
 
-	for current := from; current.IsBefore(to); current = current.AddDay() {
+	for current := from; current.IsBefore(to.AddDay()); current = current.AddDay() {
 		days = append(days, current)
 	}
 
