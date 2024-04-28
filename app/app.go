@@ -58,6 +58,12 @@ func (a *App) HandlePutClasses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !c.IsValid() {
+		http.Error(w, "input data invalid", http.StatusBadRequest)
+
+		return
+	}
+
 	_, err = a.Service.CreateClass(c)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -74,6 +80,12 @@ func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
 	err := decode(r.Body, &b)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+
+		return
+	}
+
+	if !b.IsValid() {
+		http.Error(w, "input data invalid", http.StatusBadRequest)
 
 		return
 	}
