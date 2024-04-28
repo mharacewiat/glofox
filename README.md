@@ -76,11 +76,21 @@ curl http://localhost:8080/day/1970-01-01
 
 ## Solution
 
-TODO
+- There's an openapi spec available. It can be imported in postman to facilitate testing.
+- I've decided to use built in libraries, and not install any dependencies (like `mux`). I'm relatively new to go, and I'm not familar with anything else.
+- I've decided to follow the suggestion and not use any external databases and store everything in memory. For this, I'm using a hashmaps. They aren't particularly lightweight, but could be replaced by databases without a problem (DI).
+- I've decided to validate capacity when booking a class. That makes more sense to me and gives a chance to write a little bit more logic.
+- I separated input reading and validation, business and storage layers to avoid putting everything in a one place.
 
 ## Comments
 
-TODO
+- I'm not happy with validation. Perhaps there are libraries that help with that and let perform more sophisticated calculations.
+- Maybe I'd separate domain models from request data. It might seem they're the same objects, but I would feel more comfortable having request DTOs passed deeper into the domain and then instantiating domain models.
+- I would like service to return result objects (DTSs) containing operation status (if it was successful or not, an error if any) and pick it up in app. That's something I'd feel beter about than simply returning models and errors.
+- I'm not sure about the correct way to do logging. It feels not right to have it all scattered around, but maybe that's a go "thing".
+- If the solution was using a database, I would provide a docker-compose specs.
+- I'm not sure if this is possible in go, but I would appreciate if domain models were created with New* methods on unmarshalling.
+- I've not implemented any locking mechanisms, but I know about possibility of a race condition. Lock should be obtained on storages.
 
 # Tests
 
