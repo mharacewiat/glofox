@@ -21,3 +21,10 @@ func TestNewBooking(t *testing.T) {
 		t.Errorf("Expected booking date to be %s, got %s", date, newBooking.Date)
 	}
 }
+
+func TestNewBookingInvalid(t *testing.T) {
+	_, err := NewBooking("", date.Date("1970-01-01"))
+	if err == nil {
+		t.Errorf("Expected error for invalid input")
+	}
+}

@@ -1,6 +1,9 @@
 package booking
 
-import "main/date"
+import (
+	"errors"
+	"main/date"
+)
 
 type Booking struct {
 	Name string    `json:"name"`
@@ -8,8 +11,18 @@ type Booking struct {
 }
 
 func NewBooking(name string, date date.Date) (Booking, error) {
-	return Booking{
+	booking := Booking{
 		Name: name,
 		Date: date,
-	}, nil
+	}
+
+	if !booking.IsValid() {
+		return Booking{}, errors.New("invalid class")
+	}
+
+	return booking, nil
+}
+
+func (b Booking) IsValid() bool {
+	return len(b.Name) > 0 && b.Date.IsValid()
 }

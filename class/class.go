@@ -1,6 +1,9 @@
 package class
 
-import "main/date"
+import (
+	"errors"
+	"main/date"
+)
 
 type Class struct {
 	Name      string    `json:"name"`
@@ -10,10 +13,24 @@ type Class struct {
 }
 
 func NewClass(name string, startDate date.Date, endDate date.Date, capacity int) (Class, error) {
-	return Class{
+	class := Class{
 		Name:      name,
 		StartDate: startDate,
 		EndDate:   endDate,
 		Capacity:  capacity,
-	}, nil
+	}
+
+	if !class.IsValid() {
+		return Class{}, errors.New("invalid class")
+	}
+
+	return class, nil
+}
+
+func (c Class) IsValid() bool {
+	return len(c.Name) > 0 &&
+		c.StartDate.IsValid() &&
+		c.EndDate.IsValid() &&
+		c.StartDate.IsBefore(c.EndDate) &&
+		c.Capacity > 0
 }

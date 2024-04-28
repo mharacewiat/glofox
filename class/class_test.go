@@ -29,3 +29,24 @@ func TestNewClass(t *testing.T) {
 		t.Errorf("Expected class capacity to be %d, got %d", capacity, newClass.Capacity)
 	}
 }
+
+func TestNewClassInvalidName(t *testing.T) {
+	_, err := NewClass("", date.Date("1970-01-01"), date.Date("1970-01-02"), 1)
+	if err == nil {
+		t.Errorf("Expected error for invalid input")
+	}
+}
+
+func TestNewClassInvalidDates(t *testing.T) {
+	_, err := NewClass("Foo", date.Date("1970-01-02"), date.Date("1970-01-01"), 1)
+	if err == nil {
+		t.Errorf("Expected error for invalid input")
+	}
+}
+
+func TestNewClassInvalidCapacity(t *testing.T) {
+	_, err := NewClass("Foo", date.Date("1970-01-01"), date.Date("1970-01-02"), 0)
+	if err == nil {
+		t.Errorf("Expected error for invalid input")
+	}
+}
