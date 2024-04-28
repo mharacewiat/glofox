@@ -1,8 +1,12 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"main/booking"
+	"main/class"
 	"main/service"
 	"net/http"
 )
@@ -45,10 +49,42 @@ func (a *App) HandleStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) HandlePutClasses(w http.ResponseWriter, r *http.Request) {
+	var c class.Class
+
+	err := decode(r.Body, &c)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
+		return
+	}
+
+	_, err = a.Service.CreateClass(c)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 }
 
 func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
+	var b booking.Booking
+
+	err := decode(r.Body, &b)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
+		return
+	}
+
+	_, err = a.Service.RegisterBooking(b)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -66,4 +102,8 @@ func checkContentType(contentType string, next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func decode(body io.Reader, output interface{}) error {
+	return json.NewDecoder(body).Decode(&output)
 }
