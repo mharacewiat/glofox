@@ -26,8 +26,8 @@ func NewApp(port string) (AppInterface, error) {
 
 func (a *App) Start() {
 	http.HandleFunc("GET /status", a.HandleStatus)
-	http.HandleFunc("PUT /classes", a.HandlePutClasses)
-	http.HandleFunc("POST /bookings", a.HandlePostBookings)
+	http.Handle("PUT /classes", checkJsonContentType(http.HandlerFunc(a.HandlePutClasses)))
+	http.Handle("POST /bookings", checkJsonContentType(http.HandlerFunc(a.HandlePostBookings)))
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", a.Port), nil))
 }
@@ -42,4 +42,20 @@ func (a *App) HandlePutClasses(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+}
+
+func checkJsonContentType(next http.Handler) http.Handler {
+	return checkContentType("application/json", next)
+}
+
+func checkContentType(contentType string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Content-Type") != contentType {
+			http.Error(w, "invalid content-type", http.StatusBadRequest)
+
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
