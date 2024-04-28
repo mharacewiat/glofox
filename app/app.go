@@ -56,6 +56,7 @@ func (a *App) HandlePutClasses(w http.ResponseWriter, r *http.Request) {
 
 	err := decode(r.Body, &c)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 
 		return
@@ -69,6 +70,7 @@ func (a *App) HandlePutClasses(w http.ResponseWriter, r *http.Request) {
 
 	_, err = a.Service.CreateClass(c)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 
 		return
@@ -82,6 +84,7 @@ func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
 
 	err := decode(r.Body, &b)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 
 		return
@@ -95,6 +98,7 @@ func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
 
 	_, err = a.Service.RegisterBooking(b)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 
 		return
@@ -108,6 +112,7 @@ func (a *App) HandleGetDay(w http.ResponseWriter, r *http.Request) {
 
 	day, err := date.NewDate(stringDay)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, "input data invalid", http.StatusBadRequest)
 
 		return
@@ -115,6 +120,7 @@ func (a *App) HandleGetDay(w http.ResponseWriter, r *http.Request) {
 
 	classBookings, err := a.Service.GetClassBookings(day)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 
 		return
@@ -122,6 +128,7 @@ func (a *App) HandleGetDay(w http.ResponseWriter, r *http.Request) {
 
 	response, err := json.Marshal(classBookings)
 	if err != nil {
+		log.Print(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return

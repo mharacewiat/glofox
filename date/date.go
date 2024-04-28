@@ -2,6 +2,7 @@ package date
 
 import (
 	"errors"
+	"log"
 	"time"
 )
 
@@ -24,7 +25,13 @@ func (d Date) Parse() (time.Time, error) {
 func (d Date) IsValid() bool {
 	_, err := d.Parse()
 
-	return err == nil
+	if err != nil {
+		log.Print(err.Error())
+
+		return false
+	}
+
+	return true
 }
 
 func (d Date) IsBefore(other Date) bool {
