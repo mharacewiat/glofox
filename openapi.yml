@@ -1,0 +1,54 @@
+openapi: 3.1.0
+info:
+  title: Glofox API
+  version: 1.0.0
+  description: REST API for interacting with the Glofox Service
+paths:
+  /status:
+    get:
+      summary: Indicates if the service has started up correctly
+      responses:
+        '200':
+          description: The service is ready to receive requests
+  /classes:
+    put:
+      summary: Create a class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start_date:
+                  type: string
+                end_date:
+                  type: string
+                capacity:
+                  type: integer
+      responses:
+        '200':
+          description: A class was created successfully
+        '400':
+          description: Bad Request
+  /bookings:
+    post:
+      summary: Book a class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                date:
+                  type: string
+      responses:
+        '200':
+          description: A booking was registered successfully
+        '400':
+          description: Bad Request
