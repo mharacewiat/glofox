@@ -3,12 +3,14 @@ package app
 import (
 	"fmt"
 	"log"
+	"main/service"
 	"net/http"
 )
 
 type (
 	App struct {
-		Port string
+		Port    string
+		Service service.ServiceInterface
 	}
 	AppInterface interface {
 		Start()
@@ -19,8 +21,14 @@ type (
 )
 
 func NewApp(port string) (AppInterface, error) {
+	service, err := service.NewService()
+	if err != nil {
+		return &App{}, err
+	}
+
 	return &App{
-		Port: port,
+		Port:    port,
+		Service: service,
 	}, nil
 }
 

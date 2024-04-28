@@ -3,7 +3,7 @@ package booking
 import "testing"
 
 func TestNewBooking(t *testing.T) {
-	name, date := "Foo", "1970-01-01"
+	name, date := "Bar", "1970-01-01"
 
 	newBooking, err := NewBooking(name, date)
 	if err != nil {
