@@ -1,9 +1,12 @@
 package class
 
-import "testing"
+import (
+	"main/date"
+	"testing"
+)
 
 func TestNewClass(t *testing.T) {
-	name, startDate, endDate, capacity := "Foo", "1970-01-01", "1970-01-02", 1
+	name, startDate, endDate, capacity := "Foo", date.Date("1970-01-01"), date.Date("1970-01-02"), 1
 
 	newClass, err := NewClass(name, startDate, endDate, capacity)
 	if err != nil {

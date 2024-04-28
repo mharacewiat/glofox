@@ -1,9 +1,12 @@
 package booking
 
-import "testing"
+import (
+	"main/date"
+	"testing"
+)
 
 func TestNewBooking(t *testing.T) {
-	name, date := "Bar", "1970-01-01"
+	name, date := "Bar", date.Date("1970-01-01")
 
 	newBooking, err := NewBooking(name, date)
 	if err != nil {
