@@ -33,3 +33,10 @@ func (d Date) IsBefore(other Date) bool {
 
 	return parsedDate.Before(parsedOther)
 }
+
+func (d Date) AddDay() Date {
+	parsedDate, _ := d.Parse()
+	parsedDate = parsedDate.AddDate(0, 0, 1)
+
+	return Date(parsedDate.Format("2006-01-02"))
+}
