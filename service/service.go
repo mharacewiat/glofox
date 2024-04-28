@@ -40,8 +40,6 @@ func (s *Service) CreateClass(c class.Class) (bool, error) {
 	days := getDays(c.StartDate, c.EndDate)
 
 	for _, day := range days {
-		fmt.Printf("Adding day %s", day)
-
 		if s.ClassesStorage.Has(day) {
 			return false, fmt.Errorf("a different class exists on day %s", day)
 		}

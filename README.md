@@ -91,6 +91,7 @@ curl http://localhost:8080/day/1970-01-01
 - If the solution was using a database, I would provide a docker-compose specs.
 - I'm not sure if this is possible in go, but I would appreciate if domain models were created with New* methods on unmarshalling.
 - I've not implemented any locking mechanisms, but I know about possibility of a race condition. Lock should be obtained on storages.
+- I'm not happy with app and service tests. These tests are dependent on each other and I don't know how to make go tests run in parallel.
 
 # Tests
 

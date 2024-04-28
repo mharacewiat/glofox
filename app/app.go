@@ -19,9 +19,10 @@ type (
 	}
 	AppInterface interface {
 		Start()
-		HandleStatus(w http.ResponseWriter, r *http.Request)
+		HandleGetStatus(w http.ResponseWriter, r *http.Request)
 		HandlePutClasses(w http.ResponseWriter, r *http.Request)
 		HandlePostBookings(w http.ResponseWriter, r *http.Request)
+		HandleGetDay(w http.ResponseWriter, r *http.Request)
 	}
 )
 
@@ -38,15 +39,15 @@ func NewApp(port string) (AppInterface, error) {
 }
 
 func (a *App) Start() {
-	http.HandleFunc("GET /status", a.HandleStatus)
+	http.HandleFunc("GET /status", a.HandleGetStatus)
 	http.Handle("PUT /classes", checkJsonContentType(http.HandlerFunc(a.HandlePutClasses)))
 	http.Handle("POST /bookings", checkJsonContentType(http.HandlerFunc(a.HandlePostBookings)))
-	http.HandleFunc("GET /day/{day}", a.HandleDay)
+	http.HandleFunc("GET /day/{day}", a.HandleGetDay)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", a.Port), nil))
 }
 
-func (a *App) HandleStatus(w http.ResponseWriter, r *http.Request) {
+func (a *App) HandleGetStatus(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -102,7 +103,7 @@ func (a *App) HandlePostBookings(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (a *App) HandleDay(w http.ResponseWriter, r *http.Request) {
+func (a *App) HandleGetDay(w http.ResponseWriter, r *http.Request) {
 	stringDay := r.PathValue("day")
 
 	day, err := date.NewDate(stringDay)
